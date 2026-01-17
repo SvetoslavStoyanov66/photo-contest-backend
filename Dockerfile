@@ -12,6 +12,10 @@ RUN mvn dependency:go-offline
 # Copy source code
 COPY src ./src
 
+COPY mvnw ./mvnw
+
+COPY mvnw.cmd ./mvnw.cmd
+
 # Build the JAR
 RUN mvn clean package -DskipTests
 

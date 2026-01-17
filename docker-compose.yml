@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - ./src/main/resources/db/mock.sql:/docker-entrypoint-initdb.d/mock.sql
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+
