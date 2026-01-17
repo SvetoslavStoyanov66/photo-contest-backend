@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -41,13 +42,14 @@ public class RSAKeyProps {
             /*
             Used when static keys are present
              */
-            byte[] privateKeyBytes = Files.readAllBytes(Paths.get("privateKey.pem"));
+            Path keyDir = Paths.get("/app/keys");  // matches your Dockerfile
+            byte[] privateKeyBytes = Files.readAllBytes(keyDir.resolve("privateKey.pem"));
             PKCS8EncodedKeySpec privateSpec = new PKCS8EncodedKeySpec(privateKeyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             this.privateKey = (RSAPrivateKey) keyFactory.generatePrivate(privateSpec);
 
 
-            byte[] publicKeyBytes = Files.readAllBytes(Paths.get("publicKey.pem"));
+            byte[] publicKeyBytes = Files.readAllBytes(keyDir.resolve("publicKey.pem"));
             X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(publicKeyBytes);
             this.publicKey = (RSAPublicKey) keyFactory.generatePublic(publicSpec);
         }
